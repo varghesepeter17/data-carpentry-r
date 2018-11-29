@@ -47,7 +47,6 @@ interviews %>% filter(memb_assoc=="yes") %>%
 interviews <- interviews %>% mutate(people_per_room = no_membrs/rooms)
 # created a new variable people_per_room
 # mutate keeps all the data and add a new columns into it
-
 #
 mean(interviews$no_membrs)
 # This doesn't give intormation per village
@@ -79,11 +78,51 @@ interviews %>% count(village)
 interviews %>% count (village, sort=TRUE)
 
 # Task
-
 interviews %>% group_by(village) %>%
   summarize(mean_no_membrs=mean(no_membrs), 
             min_members=min(no_membrs),
             max_members=max(no_membrs),
             n=n())
 
+#Reshape data
+# Split a variavle to multiple variables
+# wall type is split into multiple variables
+View(interviews %>% mutate(wall_type_logical=TRUE) %>%
+  spread(key= respondent_wall_type, value =wall_type_logical))
+# fill missing vaules with false
+interviews <-interviews %>% mutate(wall_type_logical=TRUE) %>%
+       spread(key= respondent_wall_type, value =wall_type_logical, fill=FALSE)
+
+# The reverse is also possible
+# Combine muliple variables into one
+# ie, undo the previous steps
+
+interviews <-interviews %>% gather(key=respondent_wall_type, value="wall_type_logical",
+                                   burntbricks:sunbricks)
+
+# Output has more rows. Now each respondant has 4 rows 
+# Total no of rows is now x 4
+
+
+# Prepare for plotting
+
+interviews <- read_csv("data/SAFI_clean.csv", na="NULL")
+interviews_plotting <- interviews %>%
+  ## spread data by items_owned
+  mutate(split_items = strsplit(items_owned, ";")) %>%
+  unnest()%>%
+  mutate(items_owned_logical = TRUE) %>%
+  spread(key = split_items, value = items_owned_logical, fill = FALSE) %>%
+  rename(no_listed_items = `<NA>`) %>%
+  ## spread data by months_lack_food
+  mutate(split_months = strsplit(months_lack_food, ";")) %>%
+  unnest() %>%
+  mutate(months_lack_food_logical = TRUE) %>%
+  spread(key = split_months, value = months_lack_food_logical, fill = FALSE) %>%
+  ## add some summary columns
+  mutate(number_months_lack_food = rowSums(select(., Apr:Sept))) %>%
+  mutate(number_items = rowSums(select(., bicycle:television)))
+
+# Saving
+write_csv(interviews_plotting, path = "data_output/interviews_plotting.csv")
 
