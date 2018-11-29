@@ -162,3 +162,8 @@ interviews$month <-month(dates)
 interviews$year <-year(dates)
 
 str(interviews)
+
+
+## Session 3
+
+
