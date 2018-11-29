@@ -37,3 +37,14 @@ interviews_god <-select(filter(interviews, village=="God"), no_membrs, years_liv
 # break the line only after the pipe symbol
 interviews_god <- interviews %>% filter(village=="God") %>% 
   select (no_membrs, years_liv)
+
+# Task
+interviews %>% filter(memb_assoc=="yes") %>%
+  select(affect_conflicts, liv_count, no_meals)
+
+# Add new variables obtained from the exisiting variables
+# mutate is the function
+interviews <- interviews %>% mutate(people_per_room = no_membrs/rooms)
+# created a new variable people_per_room
+# mutate keeps all the data and add a new columns into it
+
