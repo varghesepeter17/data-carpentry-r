@@ -23,6 +23,7 @@ ggplot(data=interviews_plotting, aes(x=village, y=rooms))+
 
 ggplot(data=interviews_plotting, aes(x=respondent_wall_type, y=rooms))+
   geom_boxplot(alpha=0)+
-  geom_jitter(alpha=0.5, color='tomato')
+  geom_jitter(alpha=0.5, color='tomato')+
+  theme_dark()
 
 
