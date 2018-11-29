@@ -76,8 +76,89 @@ interviews_last <- interviews[nrow(interviews), ]
 interviews_middle <-interviews[nrow(interviews)/2, ]
 # This method is not correct. See below
 n_row <- nrow(interviews)
-# as n_row is 131, n_row/2 is 65.5. R will take 65
+# as n_row is 131, n_row/2 is 65.5. R will take 65. 
 interviews_middle <- interviews[ceiling(n_rows / 2), ]
 # Task 6
 interviews_head <- interviews[-(7:nrow(interviews)), ]
 
+
+### Session 2 
+
+# Create a character vector and change it to a factor
+respondent_floor_type <- factor(c('earth', 'cement', 'cement', 'earth'))
+# There are two levels for the facotrs. this is different from character
+# Default is sorted in alphabetical order
+levels(respondent_floor_type)
+nlevels(respondent_floor_type)
+
+# Change the order of the levels
+respondent_floor_type
+respondent_floor_type <- factor(respondent_floor_type, levels=c('earth', 'cement'))
+
+# Levels can be changed
+# Second level is changed to brick
+levels(respondent_floor_type)[2] <- "brick"
+respondent_floor_type
+
+# you can convert factor to character
+as.character(respondent_floor_type)
+
+# Using numbers as factors
+year_fct <-factor(c(1990, 1983, 1977, 1998, 1990))
+year_fct
+as.numeric(year_fct)
+# factors are saved in the memory as numbers. See above.
+# workaround 
+as.numeric(as.character(year_fct))
+# R recommended way
+as.numeric(levels(year_fct))[year_fct]
+# Here output from as.numeric (ie, numbers) to index the year_fct to get the numbers correctly
+
+# Use exaples from the dataset
+affect_conflicts <-interviews$affect_conflicts # or affect_conflicts <-interviews[,'affect_conflicts'] 
+affect_conflicts <- as.factor(affect_conflicts)
+affect_conflicts
+# Plot the number of times each level appears in the 
+plot(affect_conflicts)
+# original plot has variables arrnged in alphabetic order. NA is not shwoing up as well
+
+affect_conflicts <- interviews$affect_conflicts
+# replace the missing data with "undetermined"
+# is.na is used to find allthe missing values.select only the missing values and assign undetermined
+affect_conflicts[is.na(affect_conflicts)] <- "undetermined"
+affect_conflicts <-factor(affect_conflicts)
+plot(affect_conflicts)
+
+affect_conflicts
+
+#Task
+# Convert more_once to "more than once
+levels(affect_conflicts)[2] <- "more than once"
+# Arrange the factors as required
+affect_conflicts <- factor(affect_conflicts, levels=c('never', 'once', 'more than once', 
+                                                      'frequently', 'undetermined'))
+plot(affect_conflicts)
+
+#Segue
+# outside tidyverse package you use read.csv. then use 'stringsAsFactors=FALSE
+# eg interviews <- read.csv("data/SAFI_clean.csv", na="NULL", stringsAsFactors=FALSE)
+
+# Priblem with dates
+# Str funtion to get an overview of the data
+str(interviews)
+# can see that R stored the date in POSIXct format
+# Use lubridate library
+
+library(lubridate)
+dates <- interviews$interview_date
+head(dates)
+# ymd year-date-month format
+# This is required if only read.csv was used instead of read_csv
+# dates <-ymd_hms(dates)
+
+# Create new variables for day, month, year
+interviews$day <- day(dates)
+interviews$month <-month(dates)
+interviews$year <-year(dates)
+
+str(interviews)
