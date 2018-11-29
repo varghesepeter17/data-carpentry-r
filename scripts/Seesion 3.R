@@ -48,3 +48,29 @@ interviews <- interviews %>% mutate(people_per_room = no_membrs/rooms)
 # created a new variable people_per_room
 # mutate keeps all the data and add a new columns into it
 
+#
+mean(interviews$no_membrs)
+# This doesn't give intormation per village
+# group_by is used for this purpose
+interviews %>% group_by(village)
+# creates a data frame grouped by village
+interviews %>% group_by(village) %>%
+  summarize(mean_no_membrs=mean(no_membrs))
+# above gives mean number of members grouped by village
+
+# group by village, select members of irrigation group
+#summary of mean no of members
+interviews %>% group_by(village) %>%
+  filter(memb_assoc=="yes") %>%
+  summarize(mean_no_membrs=mean(no_membrs))
+
+# Group by multiple conditions
+
+interviews %>% group_by(village, memb_assoc) %>%
+  summarize(mean_no_membrs=mean(no_membrs))
+
+# More than one output
+
+interviews %>% group_by(village, memb_assoc) %>%
+  summarize(mean_no_membrs=mean(no_membrs), 
+            min_members=min(no_membrs))
