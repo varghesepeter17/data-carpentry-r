@@ -65,12 +65,25 @@ interviews %>% group_by(village) %>%
   summarize(mean_no_membrs=mean(no_membrs))
 
 # Group by multiple conditions
-
 interviews %>% group_by(village, memb_assoc) %>%
   summarize(mean_no_membrs=mean(no_membrs))
 
 # More than one output
-
 interviews %>% group_by(village, memb_assoc) %>%
   summarize(mean_no_membrs=mean(no_membrs), 
             min_members=min(no_membrs))
+
+#count function
+interviews %>% count(village)
+# count and sort
+interviews %>% count (village, sort=TRUE)
+
+# Task
+
+interviews %>% group_by(village) %>%
+  summarize(mean_no_membrs=mean(no_membrs), 
+            min_members=min(no_membrs),
+            max_members=max(no_membrs),
+            n=n())
+
+
